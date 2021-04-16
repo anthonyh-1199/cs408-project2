@@ -138,12 +138,12 @@ public class CrosswordViewModel extends ViewModel {
                     map.put(key, word);
 
                     // Append clue to StringBuilder buffer (clueAcrossBuffer or clueDownBuffer)
-
-                    /*
-
-                        INSERT YOUR CODE HERE
-
-                     */
+                    if (word.isAcross()){
+                        clueAcrossBuffer.append(word.getBox() + ": " + word.getClue() + "\n");
+                    } else
+                    if (word.isDown()){
+                        clueDownBuffer.append(word.getBox() + ": " + word.getClue() + "\n");
+                    }
 
                 }
                 else if (fields.length == WORD_HEADER_FIELDS) {
