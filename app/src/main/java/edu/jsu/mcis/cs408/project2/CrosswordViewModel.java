@@ -92,12 +92,16 @@ public class CrosswordViewModel extends ViewModel {
 
         // Place word letters into Letters array
 
-        /*
-
-            INSERT YOUR CODE HERE
-
-         */
-
+        if (word.isAcross()){
+            for (int i = 0; i < (word.getWord().length()); i++){
+                letters.getValue()[row][column + i] = (word.getWord().charAt(i));
+            }
+        } else
+        if (word.isDown()) {
+            for (int i = 0; i < (word.getWord().length()); i++) {
+                letters.getValue()[row + i][column] = (word.getWord().charAt(i));
+            }
+        }
     }
 
     // Add All Words to Grid (for testing only!)
