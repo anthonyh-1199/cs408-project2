@@ -26,7 +26,7 @@ import java.util.Map;
 public class PuzzleFragment extends Fragment implements TabFragment {
 
     private final String FRAGMENT_TITLE = "Puzzle";
-    private String userInput = "PAID";
+    private String userInput = "";
 
     private ArrayList<ArrayList<TextView>> gridSquareViews;
     private ArrayList<ArrayList<TextView>> gridNumberViews;
@@ -124,16 +124,22 @@ public class PuzzleFragment extends Fragment implements TabFragment {
                 Word acrossWord = model.getWord(model.getNumber(row, col), "A");
                 Word downWord = model.getWord(model.getNumber(row, col), "D");
 
-                if (acrossWord.getWord().equals(userInput)){
-                    for (int j = 0; j < (acrossWord.getWord().length()); j++){
-                        setSquareText(row, col + j, (acrossWord.getWord().charAt(j)));
+                if (acrossWord != null) {
+                    if (acrossWord.getWord().equals(userInput)) {
+                        model.addWordToGrid(model.getNumber(row, col) + "A");
                     }
                 }
 
-                if (downWord.getWord().equals(userInput)){
-                    for (int j = 0; j < (downWord.getWord().length()); j++){
-                        setSquareText(row + j, col, (downWord.getWord().charAt(j)));
+                if (downWord != null) {
+                    if (downWord.getWord().equals(userInput)) {
+                        model.addWordToGrid(model.getNumber(row, col) + "D");
                     }
+                }
+
+                updateGrid();
+
+                if (model.checkGameWon()){
+                    displayWinMessage();
                 }
 
             }
@@ -330,6 +336,17 @@ public class PuzzleFragment extends Fragment implements TabFragment {
             windowOverheadDp = windowOverheadDp + windowOverheadDp + getResources().getDimensionPixelSize(resourceId);
         }
 
+    }
+
+    private void displayWinMessage() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
+        builder.setTitle("Congratulations!");
+        builder.setMessage("You've completed the puzzle!");
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface d, int i) {}
+        });
+        AlertDialog aboutDialog = builder.show();
     }
 
     public String getTabTitle() { return FRAGMENT_TITLE; }
