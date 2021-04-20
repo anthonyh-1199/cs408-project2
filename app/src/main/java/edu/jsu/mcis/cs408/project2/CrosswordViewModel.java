@@ -38,7 +38,33 @@ public class CrosswordViewModel extends ViewModel {
         this.context = context;
         if (words.getValue() == null) {
             loadWords();
-            addAllWordsToGrid(); // for testing only; remove later!
+
+            //Initialize board with empty squares
+            for (Map.Entry<String, Word> e : words.getValue().entrySet()) {
+
+                // Get Word Properties
+
+                int row = e.getValue().getRow();
+                int column = e.getValue().getColumn();
+                int box = e.getValue().getBox();
+
+                // Place box number into Numbers array
+
+                numbers.getValue()[row][column] = box;
+
+                // Place word letters into Letters array
+
+                if (e.getValue().isAcross()){
+                    for (int i = 0; i < (e.getValue().getWord().length()); i++){
+                        letters.getValue()[row][column + i] = BLANK_CHAR;
+                    }
+                } else
+                if (e.getValue().isDown()) {
+                    for (int i = 0; i < (e.getValue().getWord().length()); i++) {
+                        letters.getValue()[row + i][column] = BLANK_CHAR;
+                    }
+                }
+            }
         }
     }
 
@@ -76,9 +102,21 @@ public class CrosswordViewModel extends ViewModel {
 
     public Word getWord(int number, String direction){ return words.getValue().get(number + direction); }
 
+    public boolean checkGameWon(){
+        for (int row = 0; row < puzzleWidth.getValue(); row++){
+            for (int column = 0; column < puzzleHeight.getValue(); column++){
+                if (letters.getValue()[row][column] == BLANK_CHAR){
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     // Add Word to Grid
 
-    private void addWordToGrid(String key) {
+    public void addWordToGrid(String key) {
 
         // Get Word from collection (look up using the given key)
 
@@ -98,14 +136,15 @@ public class CrosswordViewModel extends ViewModel {
 
         if (word.isAcross()){
             for (int i = 0; i < (word.getWord().length()); i++){
-                letters.getValue()[row][column + i] = BLANK_CHAR;//(word.getWord().charAt(i));
+                letters.getValue()[row][column + i] = (word.getWord().charAt(i));
             }
         } else
         if (word.isDown()) {
             for (int i = 0; i < (word.getWord().length()); i++) {
-                letters.getValue()[row + i][column] = BLANK_CHAR;//(word.getWord().charAt(i));
+                letters.getValue()[row + i][column] = (word.getWord().charAt(i));
             }
         }
+
     }
 
     // Add All Words to Grid (for testing only!)
