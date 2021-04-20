@@ -94,12 +94,12 @@ public class CrosswordViewModel extends ViewModel {
 
         if (word.isAcross()){
             for (int i = 0; i < (word.getWord().length()); i++){
-                letters.getValue()[row][column + i] = (word.getWord().charAt(i));
+                letters.getValue()[row][column + i] = BLANK_CHAR;//(word.getWord().charAt(i));
             }
         } else
         if (word.isDown()) {
             for (int i = 0; i < (word.getWord().length()); i++) {
-                letters.getValue()[row + i][column] = (word.getWord().charAt(i));
+                letters.getValue()[row + i][column] = BLANK_CHAR;//(word.getWord().charAt(i));
             }
         }
     }

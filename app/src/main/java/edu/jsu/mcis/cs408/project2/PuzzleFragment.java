@@ -1,5 +1,7 @@
 package edu.jsu.mcis.cs408.project2;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -8,19 +10,23 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class PuzzleFragment extends Fragment implements TabFragment {
 
     private final String FRAGMENT_TITLE = "Puzzle";
+    private String userInput = "PAID";
 
     private ArrayList<ArrayList<TextView>> gridSquareViews;
     private ArrayList<ArrayList<TextView>> gridNumberViews;
@@ -99,6 +105,48 @@ public class PuzzleFragment extends Fragment implements TabFragment {
 
         String message = row + "/" + col;
         Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+
+        //Get input from user
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
+        builder.setTitle("Enter Guess");
+        builder.setMessage("Enter your guess:");
+        final EditText input = new EditText(this.getActivity());
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface d, int i) {
+                userInput = input.getText().toString().toUpperCase();
+
+                //Compare user's input to the box's solution
+
+                for (Map.Entry<String, Word> e : model.getWords().getValue().entrySet()) {
+                    if (e.getValue().getColumn() == col && e.getValue().getRow() == row){
+                        if (userInput.equals(e.getValue().getWord())){
+                            if (e.getValue().isAcross()){
+                                for (int j = 0; j < (e.getValue().getWord().length()); j++){
+                                    setSquareText(row, col + j, (e.getValue().getWord().charAt(j)));
+                                }
+                            } else
+                            if (e.getValue().isDown()) {
+                                for (int j = 0; j < (e.getValue().getWord().length()); j++) {
+                                    setSquareText(row + j, col, (e.getValue().getWord().charAt(j)));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface d, int i) {
+                userInput = "";
+                d.cancel();
+            }
+        });
+        AlertDialog aboutDialog = builder.show();
 
     }
 
