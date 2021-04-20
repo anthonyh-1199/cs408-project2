@@ -72,6 +72,10 @@ public class CrosswordViewModel extends ViewModel {
         return puzzleHeight.getValue();
     }
 
+    public int getNumber(int row, int column){ return numbers.getValue()[row][column]; }
+
+    public Word getWord(int number, String direction){ return words.getValue().get(number + direction); }
+
     // Add Word to Grid
 
     private void addWordToGrid(String key) {
