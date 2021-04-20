@@ -121,22 +121,21 @@ public class PuzzleFragment extends Fragment implements TabFragment {
 
                 //Compare user's input to the box's solution
 
-                for (Map.Entry<String, Word> e : model.getWords().getValue().entrySet()) {
-                    if (e.getValue().getColumn() == col && e.getValue().getRow() == row){
-                        if (userInput.equals(e.getValue().getWord())){
-                            if (e.getValue().isAcross()){
-                                for (int j = 0; j < (e.getValue().getWord().length()); j++){
-                                    setSquareText(row, col + j, (e.getValue().getWord().charAt(j)));
-                                }
-                            } else
-                            if (e.getValue().isDown()) {
-                                for (int j = 0; j < (e.getValue().getWord().length()); j++) {
-                                    setSquareText(row + j, col, (e.getValue().getWord().charAt(j)));
-                                }
-                            }
-                        }
+                Word acrossWord = model.getWord(model.getNumber(row, col), "A");
+                Word downWord = model.getWord(model.getNumber(row, col), "D");
+
+                if (acrossWord.getWord().equals(userInput)){
+                    for (int j = 0; j < (acrossWord.getWord().length()); j++){
+                        setSquareText(row, col + j, (acrossWord.getWord().charAt(j)));
                     }
                 }
+
+                if (downWord.getWord().equals(userInput)){
+                    for (int j = 0; j < (downWord.getWord().length()); j++){
+                        setSquareText(row + j, col, (downWord.getWord().charAt(j)));
+                    }
+                }
+
             }
         });
         builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
